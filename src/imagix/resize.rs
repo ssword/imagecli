@@ -48,3 +48,17 @@ fn resize_image(size: u32, src_folder: &mut PathBuf) -> Result<(), ImagixError> 
     );
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_single_image_resize() {
+        let mut path = PathBuf::from("/tmp/images/image1.jpg");
+        let destination_path = PathBuf::from("/tmp/images/tmp/images1.png");
+        match process_resize_request(SizeOption::Small, Mode::Single, &mut path) {
+            Ok(_) => println!("Successful resize of single image"),
+            Err(e) => println!("Error in single image: {:?}", e),
+        }
+    }
+}
