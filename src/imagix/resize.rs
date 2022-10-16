@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use std::result::Result;
 
 pub fn get_image_files(src_folder: PathBuf) -> Result<Vec<PathBuf>, ImagixError> {
     let entries = fs::read_dir(src_folder)
@@ -27,7 +28,7 @@ fn resize_image(size: u32, src_folder: &mut PathBuf) -> Result<(), ImagixError> 
 
     // Construct path to destination folder i.e. create /tmp
     // under source folder if not exists
-    let mu dest_folder = src_folder.clone();
+    let mut dest_folder = src_folder.clone();
     dest_folder.pop();
     dest_folder.push("tmp/");
     if !dest_folder_exists() {
@@ -54,11 +55,21 @@ mod tests {
     use super::*;
     #[test]
     fn test_single_image_resize() {
-        let mut path = PathBuf::from("/tmp/images/image1.jpg");
-        let destination_path = PathBuf::from("/tmp/images/tmp/images1.png");
+        let mut path = PathBuf::from("./images/image1.jpg");
+        let destination_path = PathBuf::from("./images/tmp/images1.png");
         match process_resize_request(SizeOption::Small, Mode::Single, &mut path) {
             Ok(_) => println!("Successful resize of single image"),
             Err(e) => println!("Error in single image: {:?}", e),
         }
+        assert_eq!(true, destination_path.exists());
+    }
+    #[test]
+    fn test_multiple_image_resize() {
+        let mut path = PathBuf::from("./images/");
+        let _res = process_resize_request(SizeOption::Small, Mode::All, &mut path);
+        let destination_path1 = PathBuf::from("./images/tmp/image1.png");
+        let destination_path2 = PathBuf::from("./images/tmp/image2.png");
+        assert_eq!(true, destination_path1.exists());
+        assert_eq!(true, destination_path2.exists());
     }
 }
