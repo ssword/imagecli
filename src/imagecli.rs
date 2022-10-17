@@ -3,7 +3,6 @@ use ::imagix::error::ImagixError;
 use ::imagix::resize::{process_resize_request, Mode, SizeOption};
 use ::imagix::stats::get_stats;
 use std::path::PathBuf;
-use std::str::FromStr;
 use structopt::StructOpt;
 
 // Define commandline arguments in a struct
